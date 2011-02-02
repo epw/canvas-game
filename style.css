@@ -1,2 +1,6 @@
 h1 { text-align: center }
 div.canvas { text-align: center }
+canvas { border: thick outset lightgray }
+div.loglabel { font-weight: bold }
+#log { border: medium inset lightgray;
+       width: 600px; height: 300px }
