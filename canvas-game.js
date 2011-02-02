@@ -192,7 +192,7 @@ Game_Object.def ("touching",
 		    if (this.shape == "circle") {
 			if (gobj.shape == "circle") {
 			    return (hypot (this.x - gobj.x, this.y - gobj.y)
-				    <= (this.w() / 2 + gobj.w() / 2);
+				    <= (this.w() / 2 + gobj.w() / 2));
 			} else if (gobj.shape == "rect") {
 			    if (between (this.x, gobj.left(), gobj.right())) {
 				return (this.bottom() >= gobj.top()
