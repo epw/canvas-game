@@ -84,6 +84,17 @@ function load_frames (srcs) {
     return frames;
 }
 
+function safe_image_draw (ctx, image, x, y, w, h) {
+    try {
+        if (w == undefined) {
+            ctx.drawImage (image, x, y);
+        } else {
+            ctx.drawImage (image, x, y, w, h);
+        }
+    } catch (x) {
+    }
+}
+
 function Game_Object (image, scale, x, y, theta, shape) {
     if (typeof (image) == "undefined") {
 	image = null;
@@ -222,11 +233,11 @@ Game_Object.def ("draw",
 		     ctx.rotate (this.theta);
 		     ctx.scale (this.scalex, this.scaley);
 		     if (typeof(this.imagefun) == "undefined") {
-			 save_draw_image (ctx, this.image,
+			 safe_draw_image (ctx, this.image,
 					  this.left(), this.top(),
 					  scalex, scaley);
 		     } else {
-			 this.imagefun ();
+			 this.imagefun (ctx);
 		     }
 		     ctx.restore ();
 		 });
