@@ -140,11 +140,13 @@ function Game_Object (image, scale, x, y, theta, shape) {
     }
 
     if (this.shape == "circle") {
-        if (typeof (this.image.width) != "undefined"
-	    && typeof (this.image.height) != "undefined") {
-	    this.width = (this.image.width * this.scalex
-			  + this.image.height * this.scaley) / 2;
-	    this.height = this.width;
+	if (this.image) {
+            if (typeof (this.image.width) != "undefined"
+		&& typeof (this.image.height) != "undefined") {
+		this.width = (this.image.width * this.scalex
+			      + this.image.height * this.scaley) / 2;
+		this.height = this.width;
+	    }
 	}
     }
 }
@@ -215,6 +217,24 @@ Game_Object.def ("touching",
 				return (this.right() >= gobj.left()
 					&& this.left() <= gobj.right());
 			    }
+			    if ((hypot (this.x - gobj.left(),
+					this.y - gobj.top())
+				 <= this.w() / 2)
+				|| (hypot (this.x - gobj.right(),
+					   this.y - gobj.top())
+				    <= this.w() / 2)
+				|| (hypot (this.x - gobj.right(),
+					   this.y - gobj.bottom())
+				    <= this.w() / 2)
+				|| (hypot (this.x - gobj.left(),
+					   this.y - gobj.bottom())
+				    <= this.w() / 2)) {
+				return true;
+			    }
+			    return false;
+			} else {
+			    return "Argument object has unknown shape "
+				+ gobj.shape;
 			}
 		    } else if (this.shape == "rect") {
 			if (gobj.shape == "circle") {
@@ -224,7 +244,13 @@ Game_Object.def ("touching",
 				    && this.right() >= gobj.left()
 				    && this.top() <= gobj.bottom()
 				    && this.bottom() >= gobj.top());
+			} else {
+			    return "Argument object has unknown shape "
+				+ gobj.shape;
 			}
+		    } else {
+			return "this object has unknown shape "
+			    + gobj.shape;
 		    }
 		    return null;
 		});

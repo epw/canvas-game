@@ -3,18 +3,24 @@ var main_loop;
 
 var keys = {};
 
-var balls = [];
-Ball.Inherits (Game_Object);
-function Ball (r) {
-    Inherit (this, Game_Object, draw_ball, 1,
+var player;
+
+var things = [];
+Thing.Inherits (Game_Object);
+function Thing (r) {
+    if (typeof(r) == "undefined") {
+	Inherit (this, Game_Object);
+	return;
+    }
+    Inherit (this, Game_Object, draw_thing, 1,
 	     roll (canvas.width - r * 2) + r,
-	     roll (canvas.height - r * 2) + r);
+	     roll (canvas.height - r * 2) + r, 0, "rect");
     this.width = r * 2;
     this.height = r * 2;
     this.color = "rgb(255, 0, 0)";
     this.speed = 5;
 }
-Ball.def ("try_move",
+Thing.def ("try_move",
 	  function (vx, vy) {
 	      this.x += vx;
 	      this.y += vy;
@@ -25,23 +31,50 @@ Ball.def ("try_move",
 		  this.y -= vy;
 	      }
 	  });
-Ball.def ("update",
+Thing.def ("update",
 	 function () {
-	     if (keys[KEY.LEFT]) {
-		 this.try_move (-this.speed, 0);
-	     }
-	     if (keys[KEY.RIGHT]) {
-		 this.try_move (this.speed, 0);
-	     }
-	     if (keys[KEY.UP]) {
-		 this.try_move (0, -this.speed);
-	     }
-	     if (keys[KEY.DOWN]) {
-		 this.try_move (0, this.speed);
+	     for (thing in things) {
+		 if (things[thing] == this) {
+		     continue;
+		 }
+		 this.color = "rgb(255, 0, 0)";
+		 if (this.touching (things[thing])) {
+		     this.color = "rgb(0, 255, 0)";
+		 }
 	     }
 	 });
 
-function draw_ball (ctx) {
+Player.Inherits (Thing);
+function Player (r) {
+    Inherit (this, Thing, r);
+    this.imagefun = draw_player;
+    this.shape = "circle";
+}
+Player.def ("update",
+	    function () {
+		this.parent ("update");
+		if (keys[KEY.LEFT]) {
+		    player.try_move (-player.speed, 0);
+		}
+		if (keys[KEY.RIGHT]) {
+		    player.try_move (player.speed, 0);
+		}
+		if (keys[KEY.UP]) {
+		    player.try_move (0, -player.speed);
+		}
+		if (keys[KEY.DOWN]) {
+		    player.try_move (0, player.speed);
+		}
+	    });
+
+function draw_thing (ctx) {
+    ctx.save ();
+    ctx.fillStyle = this.color;
+    ctx.fillRect (-this.w() / 2, -this.h() / 2, this.w(), this.h());
+    ctx.restore ();
+}
+
+function draw_player (ctx) {
     ctx.save ();
     ctx.fillStyle = this.color;
     ctx.beginPath ();
@@ -60,15 +93,15 @@ function draw () {
 
     ctx.restore ();
 
-    for (ball in balls) {
-	balls[ball].draw (ctx);
+    for (thing in things) {
+	things[thing].draw (ctx);
     }
 
 }
 
 function update () {
-    for (ball in balls) {
-	balls[ball].update ();
+    for (thing in things) {
+	things[thing].update ();
     }
 
     draw ();
@@ -92,7 +125,9 @@ function key_release (event) {
 function init () {
     canvas = document.getElementById("canvas");
 
-    balls.push (new Ball(20));
+    player = new Player (20);
+    things.push (player);
+    things.push (new Thing(20));
 
     main_loop = setInterval (update, 1000.0 / FRAME_RATE);
 }
