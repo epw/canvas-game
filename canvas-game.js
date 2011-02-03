@@ -5,30 +5,32 @@ var FRAME_RATE = 30; // Can be set by application
 var KEY = { RIGHT:39, UP:38, LEFT:37, DOWN:40, SPACE:32, ESCAPE:27, RETURN:13};
 
 // Declarations to allow normal inheritance
-Object.prototype.Inherits = function( parent ) {
- if( arguments.length > 1 ) {
-  parent.apply( this, Array.prototype.slice.call( arguments, 1 ) );
- } else {
-  parent.call( this );
- }
-};
+function Inherit () {
+    var self = arguments[0];
+    var parent = arguments[1];
+    if( arguments.length > 2 ) {
+	parent.apply( self, Array.prototype.slice.call( arguments, 2 ) );
+    } else {
+	parent.call( self );
+    }
+}
 
 Function.prototype.Inherits = function( parent ) {
- this.prototype = new parent();
- this.prototype.constructor = this;
- this.prototype.parent = function () {
-  if (arguments.length == 0) {
-   throw "parent function requires name of method to invoke.";
-  }
-  funname = arguments[0];
-  return parent.prototype[funname].apply (this,
-                                          Array.prototype.slice.call
+    this.prototype = new parent();
+    this.prototype.constructor = this;
+    this.prototype.parent = function () {
+	if (arguments.length == 0) {
+	    throw "parent function requires name of method to invoke.";
+	}
+	funname = arguments[0];
+	return parent.prototype[funname].apply (this,
+						Array.prototype.slice.call
                                                 (arguments, 1));
- };
+    };
 };
 
 Function.prototype.def = function (name, data) {
- this.prototype[name] = data;
+    this.prototype[name] = data;
 }
 // End inheritance declarations
 
@@ -242,4 +244,4 @@ Game_Object.def ("draw",
 		     ctx.restore ();
 		 });
 Game_Object.def ("update",
-		 function () { });
+		 function () { return null; });
