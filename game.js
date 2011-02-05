@@ -46,7 +46,9 @@ Player.Inherits (Thing);
 function Player (r) {
     Inherit (this, Thing, r);
     delete this.image;
-    this.imagefun = draw_thing;
+    this.imagefun = draw_player;
+    this.width = 40;
+    this.height = 40;
     this.shape = "circle";
 }
 Player.def ("update",
@@ -65,6 +67,13 @@ Player.def ("update",
 		    player.try_move (0, player.speed);
 		}
 	    });
+
+function log (s) {
+    $("#log").append ("<div class=\"logentry\">");
+    $("#log").append ("<span class=\"logtimestamp\">"
+		      + Math.floor((new Date()).getTime() / 1000) + "</span> ");
+    $("#log").append (s  + "</div>\n");
+}
 
 function draw_thing (ctx) {
     ctx.save ();
@@ -114,9 +123,12 @@ function key_press (event) {
 function key_release (event) {
     keys[event.which] = false;
     switch (event.which) {
+    case KEY.SPACE:
+	log (player.left() + ", " + player.top());
+	break;
     case KEY.ESCAPE:
 	clearInterval (main_loop);
-	$("#log").append ("<div>Stopped</div>\n");
+	log ("Stopped");
 	break;
     }
 }
