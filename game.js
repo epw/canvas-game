@@ -12,11 +12,9 @@ function Thing (r) {
 	Inherit (this, Game_Object);
 	return;
     }
-    Inherit (this, Game_Object, draw_thing, 1,
+    Inherit (this, Game_Object, "sphere.png", 1,
 	     roll (canvas.width - r * 2) + r,
-	     roll (canvas.height - r * 2) + r, 0, "rect");
-    this.width = r * 2;
-    this.height = r * 2;
+	     roll (canvas.height - r * 2) + r, 0, "circle");
     this.color = "rgb(255, 0, 0)";
     this.speed = 5;
 }
@@ -47,7 +45,8 @@ Thing.def ("update",
 Player.Inherits (Thing);
 function Player (r) {
     Inherit (this, Thing, r);
-    this.imagefun = draw_player;
+    delete this.image;
+    this.imagefun = draw_thing;
     this.shape = "circle";
 }
 Player.def ("update",
@@ -103,7 +102,7 @@ function update () {
     for (thing in things) {
 	things[thing].update ();
     }
-
+    
     draw ();
 }
 

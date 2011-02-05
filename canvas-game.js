@@ -56,7 +56,7 @@ function between (x, lower, upper, exclusive) {
 	upper = lower;
 	lower = tmp;
     }
-    if (typeof (exclusive) == "undefined" || exclusive == false) {
+    if (!exclusive) {
 	return (x >= lower) && (x <= upper);
     }
     return (x > lower) && (x < upper);
@@ -86,7 +86,8 @@ function load_frames (srcs) {
     return frames;
 }
 
-function safe_image_draw (ctx, image, x, y, w, h) {
+var ignore_errors = true;
+function safe_draw_image (ctx, image, x, y, w, h) {
     try {
         if (w == undefined) {
             ctx.drawImage (image, x, y);
@@ -94,6 +95,9 @@ function safe_image_draw (ctx, image, x, y, w, h) {
             ctx.drawImage (image, x, y, w, h);
         }
     } catch (x) {
+	if (!ignore_errors) {
+	    throw x;
+	}
     }
 }
 
@@ -141,8 +145,7 @@ function Game_Object (image, scale, x, y, theta, shape) {
 
     if (this.shape == "circle") {
 	if (this.image) {
-            if (typeof (this.image.width) != "undefined"
-		&& typeof (this.image.height) != "undefined") {
+            if (this.image.width && this.image.height) {
 		this.width = (this.image.width * this.scalex
 			      + this.image.height * this.scaley) / 2;
 		this.height = this.width;
@@ -157,14 +160,14 @@ Game_Object.def ("choose_frame",
 		 });
 Game_Object.def ("w",
 		 function () {
-		     if (typeof (this.width) == "undefined") {
+		     if (typeof(this.width) == "undefined" && this.image) {
 			 return this.image.width * this.scalex;
 		     }
 		     return this.width * this.scalex;
 		 });
 Game_Object.def ("h",
 		 function () {
-		     if (typeof (this.height) == "undefined") {
+		     if (typeof(this.height) == "undefined" && this.image) {
 			 return this.image.height * this.scaley;
 		     }
 		     return this.height * this.scaley;
@@ -260,10 +263,10 @@ Game_Object.def ("draw",
 		     ctx.translate (this.x, this.y);
 		     ctx.rotate (this.theta);
 		     ctx.scale (this.scalex, this.scaley);
-		     if (typeof(this.imagefun) == "undefined") {
+		     if (!this.imagefun) {
 			 safe_draw_image (ctx, this.image,
-					  this.left(), this.top(),
-					  scalex, scaley);
+					  -this.w() / 2, -this.h() / 2,
+					  this.image.width, this.image.height);
 		     } else {
 			 this.imagefun (ctx);
 		     }
