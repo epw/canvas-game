@@ -49,7 +49,7 @@ function Player (r) {
     this.imagefun = draw_player;
     this.width = 40;
     this.height = 40;
-    this.shape = "circle";
+    this.shape = "rect";
 }
 Player.def ("update",
 	    function () {
@@ -85,9 +85,10 @@ function draw_thing (ctx) {
 function draw_player (ctx) {
     ctx.save ();
     ctx.fillStyle = this.color;
-    ctx.beginPath ();
-    ctx.arc (0, 0, this.w() / 2, 0, Math.PI * 2, false);
-    ctx.fill ();
+//    ctx.beginPath ();
+//    ctx.arc (0, 0, this.w() / 2, 0, Math.PI * 2, false);
+//    ctx.fill ();
+    ctx.fillRect (-this.w() / 2, -this.h() / 2, this.w(), this.h());
     ctx.restore ();
 }
 
