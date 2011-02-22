@@ -9,18 +9,13 @@ var things = [];
 Thing.prototype = new Game_Object;
 function Thing (r) {
     if (typeof(r) == "undefined") {
-	this.parent = new Game_Object ();
 	Game_Object.call (this);
 	return;
     }
-    this.parent = new Game_Object (draw_thing, 1,
-				   roll (canvas.width - r * 2) + r,
-				   roll (canvas.height - r * 2) + r, 0,
-				   "circle");
     Game_Object.call (this, draw_thing, 1,
 		      roll (canvas.width - r * 2) + r,
 		      roll (canvas.height - r * 2) + r, 0,
-		      "circle");
+		      "rect");
     this.color = "rgb(255, 0, 0)";
     this.speed = 5;
     this.width = r * 2;
@@ -36,37 +31,29 @@ Thing.prototype.pass =
     };
 Thing.prototype.update =
     function () {
-	log ("Thing.update()");
-	this.parent ("update");
-	// for (thing in things) {
-	// 	   if (things[thing] == this) {
- 	// 	       continue;
-	// 	   }
- 	// 	   this.color = "rgb(255, 0, 0)";
- 	// 	   if (this.touching (things[thing])) {
- 	// 	       this.color = "rgb(0, 255, 0)";
- 	// 	   }
- 	// }
-	if (keys[65]) {
-	    this.color = "rgb(0, 0, 255)";
-	} else {
-	    this.color = "rgb(255, 0, 0)";
-	}
+	Game_Object.prototype.update.call (this);
+	for (thing in things) {
+		   if (things[thing] == this) {
+ 		       continue;
+		   }
+ 		   this.color = "rgb(255, 0, 0)";
+ 		   if (this.touching (things[thing])) {
+ 		       this.color = "rgb(0, 255, 0)";
+ 		   }
+ 	}
     };
 
 Player.prototype = new Thing;
 function Player (r) {
-    this.parent = new Thing (r);
     Thing.call (this, r);
     delete this.image;
     this.imagefun = draw_player;
     this.width = 40;
     this.height = 40;
-    this.shape = "rect";
+    this.shape = "circle";
 }
 Player.prototype.update =
     function () {
-	this.parent ("update");
 	if (keys[KEY.LEFT]) {
 	    player.vx = -player.speed;
 	} else if (keys[KEY.RIGHT]) {
@@ -82,6 +69,8 @@ Player.prototype.update =
 	} else {
 	    player.vy = 0;
 	}
+
+	Thing.prototype.update.call (this);
     };
 
 function log (s) {
@@ -101,10 +90,10 @@ function draw_thing (ctx) {
 function draw_player (ctx) {
     ctx.save ();
     ctx.fillStyle = this.color;
-//    ctx.beginPath ();
-//    ctx.arc (0, 0, this.w() / 2, 0, Math.PI * 2, false);
-//    ctx.fill ();
-    ctx.fillRect (-this.w() / 2, -this.h() / 2, this.w(), this.h());
+    ctx.beginPath ();
+    ctx.arc (0, 0, this.w() / 2, 0, Math.PI * 2, false);
+    ctx.fill ();
+//    ctx.fillRect (-this.w() / 2, -this.h() / 2, this.w(), this.h());
     ctx.restore ();
 }
 
@@ -143,7 +132,8 @@ function key_release (event) {
     keys[chr(event.which)] = false;
     switch (event.which) {
     case KEY.SPACE:
-	log (player.left() + ", " + player.top());
+	log (player.left() + ", " + player.top()
+	     + " (" + player.vx + ", " + player.vy + ")");
 	break;
     case KEY.ESCAPE:
 	clearInterval (main_loop);
