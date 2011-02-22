@@ -4,36 +4,6 @@
 var FRAME_RATE = 30; // Can be set by application
 var KEY = { RIGHT:39, UP:38, LEFT:37, DOWN:40, SPACE:32, ESCAPE:27, RETURN:13};
 
-// Declarations to allow normal inheritance
-function Inherit () {
-    var self = arguments[0];
-    var parent = arguments[1];
-    if( arguments.length > 2 ) {
-	parent.apply( self, Array.prototype.slice.call( arguments, 2 ) );
-    } else {
-	parent.call( self );
-    }
-}
-
-Function.prototype.Inherits = function( parent ) {
-    this.prototype = new parent();
-    this.prototype.constructor = this;
-    this.prototype.parent = function () {
-	if (arguments.length == 0) {
-	    throw "parent function requires name of method to invoke.";
-	}
-	funname = arguments[0];
-	return parent.prototype[funname].apply (this,
-						Array.prototype.slice.call
-                                                (arguments, 1));
-    };
-};
-
-Function.prototype.def = function (name, data) {
-    this.prototype[name] = data;
-}
-// End inheritance declarations
-
 // Utility functions
 function ord (c) {
     return c.charCodeAt(0);
@@ -123,6 +93,10 @@ function Game_Object (image, scale, x, y, theta, shape) {
     
     this.x = x;
     this.y = y;
+    this.vx = 0;
+    this.vy = 0;
+    this.clip = {"x": 0, "y": 0, "w": 640, "h": 480};
+
     if (scale instanceof Array) {
 	this.scalex = scale[0];
 	this.scaley = scale[1];
@@ -153,124 +127,147 @@ function Game_Object (image, scale, x, y, theta, shape) {
 	}
     }
 }
-Game_Object.def ("choose_frame",
-		 function (n) {
-		     this.image = this.frames[n];
-		     return this.image;
-		 });
-Game_Object.def ("w",
-		 function () {
-		     if (typeof(this.width) == "undefined" && this.image) {
-			 return this.image.width * this.scalex;
-		     }
-		     return this.width * this.scalex;
-		 });
-Game_Object.def ("h",
-		 function () {
-		     if (typeof(this.height) == "undefined" && this.image) {
-			 return this.image.height * this.scaley;
-		     }
-		     return this.height * this.scaley;
-		 });
-Game_Object.def ("left",
-		 function (val) {
-		     if (typeof (val) == "undefined") {
-			 return this.x - this.w() / 2;
-		     }
-		     this.x = val + this.w() / 2;
-		     return this.x - this.w() / 2;
-		 });
-Game_Object.def ("right",
-		 function (val) {
-		     if (typeof (val) == "undefined") {
-			 return this.x + this.w() / 2;
-		     }
-		     this.x = val - this.w() / 2;
-		     return this.x + this.w() / 2;
-		 });
-Game_Object.def ("top",
-		 function (val) {
-		     if (typeof (val) == "undefined") {
-			 return this.y - this.h() / 2;
-		     }
-		     this.y = val + this.h() / 2;
-		     return this.y - this.h() / 2;
-		 });
-Game_Object.def ("bottom",
-		 function (val) {
-		     if (typeof (val) == "undefined") {
-			 return this.y + this.h() / 2;
-		     }
-		     this.y = val - this.h() / 2;
-		     return this.y + this.h() / 2;
+Game_Object.prototype.choose_frame =
+    function (n) {
+	this.image = this.frames[n];
+	return this.image;
+    };
+Game_Object.prototype.w =
+    function () {
+	if (typeof(this.width) == "undefined" && this.image) {
+	    return this.image.width * this.scalex;
+	}
+	return this.width * this.scalex;
+    };
+Game_Object.prototype.h =
+    function () {
+	if (typeof(this.height) == "undefined" && this.image) {
+	    return this.image.height * this.scaley;
+	}
+	return this.height * this.scaley;
+    };
+Game_Object.prototype.left =
+    function (val) {
+	if (typeof (val) == "undefined") {
+	    return this.x - this.w() / 2;
+	}
+	this.x = val + this.w() / 2;
+	return this.x - this.w() / 2;
+    };
+Game_Object.prototype.right =
+    function (val) {
+	if (typeof (val) == "undefined") {
+	    return this.x + this.w() / 2;
+	}
+	this.x = val - this.w() / 2;
+	return this.x + this.w() / 2;
+    };
+Game_Object.prototype.top =
+    function (val) {
+	if (typeof (val) == "undefined") {
+	    return this.y - this.h() / 2;
+	}
+	this.y = val + this.h() / 2;
+	return this.y - this.h() / 2;
+    };
+Game_Object.prototype.bottom =
+    function (val) {
+	if (typeof (val) == "undefined") {
+	    return this.y + this.h() / 2;
+	}
+	this.y = val - this.h() / 2;
+	return this.y + this.h() / 2;
 
-		 });
-Game_Object.def ("touching",
-		function (gobj) {
-		    if (this.shape == "circle") {
-			if (gobj.shape == "circle") {
-			    return (hypot (this.x - gobj.x, this.y - gobj.y)
-				    <= (this.w() / 2 + gobj.w() / 2));
-			} else if (gobj.shape == "rect") {
-			    if (between (this.x, gobj.left(), gobj.right())) {
-				return (this.bottom() >= gobj.top()
-					&& this.top() <= gobj.bottom());
-			    }
-			    if (between (this.y, gobj.top(), gobj.bottom())) {
-				return (this.right() >= gobj.left()
-					&& this.left() <= gobj.right());
-			    }
-			    if ((hypot (this.x - gobj.left(),
-					this.y - gobj.top())
-				 <= this.w() / 2)
-				|| (hypot (this.x - gobj.right(),
-					   this.y - gobj.top())
-				    <= this.w() / 2)
-				|| (hypot (this.x - gobj.right(),
-					   this.y - gobj.bottom())
-				    <= this.w() / 2)
-				|| (hypot (this.x - gobj.left(),
-					   this.y - gobj.bottom())
-				    <= this.w() / 2)) {
-				return true;
-			    }
-			    return false;
-			} else {
-			    return "Argument object has unknown shape "
-				+ gobj.shape;
-			}
-		    } else if (this.shape == "rect") {
-			if (gobj.shape == "circle") {
-			    return gobj.touching (this);
-			} else if (gobj.shape == "rect") {
-			    return (this.left() <= gobj.right()
-				    && this.right() >= gobj.left()
-				    && this.top() <= gobj.bottom()
-				    && this.bottom() >= gobj.top());
-			} else {
-			    return "Argument object has unknown shape "
-				+ gobj.shape;
-			}
-		    } else {
-			return "this object has unknown shape "
-			    + gobj.shape;
-		    }
-		    return null;
-		});
-Game_Object.def ("draw",
-		 function (ctx) {
-		     ctx.save ();
-		     ctx.translate (this.x, this.y);
-		     ctx.rotate (this.theta);
-		     ctx.scale (this.scalex, this.scaley);
-		     if (!this.imagefun) {
-			 safe_draw_image (ctx, this.image,
-					  -this.w() / 2, -this.h() / 2,
-					  this.image.width, this.image.height);
-		     } else {
-			 this.imagefun (ctx);
-		     }
-		     ctx.restore ();
-		 });
-Game_Object.def ("update",
-		 function () { return null; });
+    };
+Game_Object.prototype.touching =
+    function (gobj) {
+	if (this.shape == "circle") {
+	    if (gobj.shape == "circle") {
+		return (hypot (this.x - gobj.x, this.y - gobj.y)
+			<= (this.w() / 2 + gobj.w() / 2));
+	    } else if (gobj.shape == "rect") {
+		if (between (this.x, gobj.left(), gobj.right())) {
+		    return (this.bottom() >= gobj.top()
+			    && this.top() <= gobj.bottom());
+		}
+		if (between (this.y, gobj.top(), gobj.bottom())) {
+		    return (this.right() >= gobj.left()
+			    && this.left() <= gobj.right());
+		}
+		if ((hypot (this.x - gobj.left(),
+			    this.y - gobj.top())
+		     <= this.w() / 2)
+		    || (hypot (this.x - gobj.right(),
+			       this.y - gobj.top())
+			<= this.w() / 2)
+		    || (hypot (this.x - gobj.right(),
+			       this.y - gobj.bottom())
+			<= this.w() / 2)
+		    || (hypot (this.x - gobj.left(),
+			       this.y - gobj.bottom())
+			<= this.w() / 2)) {
+		    return true;
+		}
+		return false;
+	    } else {
+		return "Argument object has unknown shape "
+		    + gobj.shape;
+	    }
+	} else if (this.shape == "rect") {
+	    if (gobj.shape == "circle") {
+		return gobj.touching (this);
+	    } else if (gobj.shape == "rect") {
+		return (this.left() <= gobj.right()
+			&& this.right() >= gobj.left()
+			&& this.top() <= gobj.bottom()
+			&& this.bottom() >= gobj.top());
+	    } else {
+		return "Argument object has unknown shape "
+		    + gobj.shape;
+	    }
+	} else {
+	    return "this object has unknown shape "
+		+ gobj.shape;
+	}
+	return null;
+    };
+Game_Object.prototype.draw =
+    function (ctx) {
+	if (this.right() < this.clip.x
+	    || this.left() > this.clip.x + this.clip.w
+	    || this.bottom() < this.clip.y
+	    || this.top() > this.clip.y + this.clip.h) {
+	    return;
+	}
+	ctx.save ();
+	ctx.translate (this.x, this.y);
+	ctx.rotate (this.theta);
+	ctx.scale (this.scalex, this.scaley);
+	if (!this.imagefun) {
+	    safe_draw_image (ctx, this.image,
+			     -this.w() / 2, -this.h() / 2,
+			     this.image.width, this.image.height);
+	} else {
+	    this.imagefun (ctx);
+	}
+	ctx.restore ();
+    };
+Game_Object.prototype.pass =
+    function () {
+	return true;
+    };
+Game_Object.prototype.try_move =
+    function (dx, dy) {
+	this.x += dx;
+	this.y += dy;
+
+	if (this.pass() == false) {
+	    this.x -= dx;
+	    this.y -= dy;
+	}
+    };
+Game_Object.prototype.update =
+    function () {
+	this.try_move (this.vx, 0);
+	this.try_move (0, this.vy);
+    };

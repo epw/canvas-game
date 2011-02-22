@@ -6,67 +6,83 @@ var keys = {};
 var player;
 
 var things = [];
-Thing.Inherits (Game_Object);
+Thing.prototype = new Game_Object;
 function Thing (r) {
     if (typeof(r) == "undefined") {
-	Inherit (this, Game_Object);
+	this.parent = new Game_Object ();
+	Game_Object.call (this);
 	return;
     }
-    Inherit (this, Game_Object, "sphere.png", 1,
-	     roll (canvas.width - r * 2) + r,
-	     roll (canvas.height - r * 2) + r, 0, "circle");
+    this.parent = new Game_Object (draw_thing, 1,
+				   roll (canvas.width - r * 2) + r,
+				   roll (canvas.height - r * 2) + r, 0,
+				   "circle");
+    Game_Object.call (this, draw_thing, 1,
+		      roll (canvas.width - r * 2) + r,
+		      roll (canvas.height - r * 2) + r, 0,
+		      "circle");
     this.color = "rgb(255, 0, 0)";
     this.speed = 5;
+    this.width = r * 2;
+    this.height = r * 2;
 }
-Thing.def ("try_move",
-	  function (vx, vy) {
-	      this.x += vx;
-	      this.y += vy;
+Thing.prototype.pass =
+    function () {
+	if (this.left() < 0 || this.right() > canvas.width
+ 	    || this.top() < 0 || this.bottom() > canvas.height) {
+ 	    return false;
+ 	}
+ 	return true;
+    };
+Thing.prototype.update =
+    function () {
+	log ("Thing.update()");
+	this.parent ("update");
+	// for (thing in things) {
+	// 	   if (things[thing] == this) {
+ 	// 	       continue;
+	// 	   }
+ 	// 	   this.color = "rgb(255, 0, 0)";
+ 	// 	   if (this.touching (things[thing])) {
+ 	// 	       this.color = "rgb(0, 255, 0)";
+ 	// 	   }
+ 	// }
+	if (keys[65]) {
+	    this.color = "rgb(0, 0, 255)";
+	} else {
+	    this.color = "rgb(255, 0, 0)";
+	}
+    };
 
-	      if (this.left() < 0 || this.right() > canvas.width
-		  || this.top() < 0 || this.bottom() > canvas.height) {
-		  this.x -= vx;
-		  this.y -= vy;
-	      }
-	  });
-Thing.def ("update",
-	 function () {
-	     for (thing in things) {
-		 if (things[thing] == this) {
-		     continue;
-		 }
-		 this.color = "rgb(255, 0, 0)";
-		 if (this.touching (things[thing])) {
-		     this.color = "rgb(0, 255, 0)";
-		 }
-	     }
-	 });
-
-Player.Inherits (Thing);
+Player.prototype = new Thing;
 function Player (r) {
-    Inherit (this, Thing, r);
+    this.parent = new Thing (r);
+    Thing.call (this, r);
     delete this.image;
     this.imagefun = draw_player;
     this.width = 40;
     this.height = 40;
     this.shape = "rect";
 }
-Player.def ("update",
-	    function () {
-		this.parent ("update");
-		if (keys[KEY.LEFT]) {
-		    player.try_move (-player.speed, 0);
-		}
-		if (keys[KEY.RIGHT]) {
-		    player.try_move (player.speed, 0);
-		}
-		if (keys[KEY.UP]) {
-		    player.try_move (0, -player.speed);
-		}
-		if (keys[KEY.DOWN]) {
-		    player.try_move (0, player.speed);
-		}
-	    });
+Player.prototype.update =
+    function () {
+	this.parent ("update");
+	if (keys[KEY.LEFT]) {
+	    player.vx = -player.speed;
+	} else if (keys[KEY.RIGHT]) {
+	    player.vx = player.speed;
+	} else {
+	    player.vx = 0;
+	}
+	
+	if (keys[KEY.UP]) {
+	    player.vy = -player.speed;
+	} else if (keys[KEY.DOWN]) {
+	    player.vy = player.speed;
+	} else {
+	    player.vy = 0;
+	}
+    };
 
 function log (s) {
     $("#log").append ("<div class=\"logentry\">");
@@ -118,11 +134,13 @@ function update () {
 
 function key_press (event) {
     keys[event.which] = true;
+    keys[chr(event.which)] = true;
     switch (event.which) {
     }
 }
 function key_release (event) {
     keys[event.which] = false;
+    keys[chr(event.which)] = false;
     switch (event.which) {
     case KEY.SPACE:
 	log (player.left() + ", " + player.top());
@@ -140,6 +158,9 @@ function init () {
     player = new Player (20);
     things.push (player);
     things.push (new Thing(20));
+    things[0].vx = 1;
+
+    $(".loglabel").click (function () { $(this).toggle (); });
 
     main_loop = setInterval (update, 1000.0 / FRAME_RATE);
 }
