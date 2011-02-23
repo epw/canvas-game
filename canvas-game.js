@@ -45,7 +45,28 @@ function remove_from_array (array, obj) {
 
 var game_messages = [];
 
-function draw_game_message (main_loop) {
+function Game_Msg (msg, color, timeout, font, background) {
+    this.msg = msg;
+    if (color == undefined) {
+	this.color = "rgb(255, 255, 255)";
+    } else {
+	this.color = color;
+    }
+    this.timeout = timeout;
+    if (font == undefined || font == null) {
+	this.font = "48px Sans";
+    } else {
+	this.font = font;
+    }
+    this.size = 48;
+    if (background == undefined) {
+	this.background = null;
+    } else {
+	this.background = background;
+    }
+}
+
+function draw_game_message (ctx, canvas) {
     if (game_messages.length == 0) {
 	return;
     }
@@ -58,34 +79,27 @@ function draw_game_message (main_loop) {
     msg = game_messages[0];
     msg.timeout--;
 
-    var ctx = canvas.getContext ('2d');
-
     ctx.save ();
     ctx.fillStyle = msg.color;
     ctx.font = msg.font;
     strs = msg.msg.split ("\n");
     for (s in strs) {
+	ctx.save ();
 	w = ctx.measureText (strs[s]);
-	ctx.fillText (strs[s], canvas.width / 2 - w.width / 2,
-		      canvas.height / 2 - 10 + s * 64);
+	ctx.translate (canvas.width / 2 - w.width / 2,
+		       canvas.height / 2 - 10 + s * (msg.size + 5));
+	ctx.save ();
+	ctx.translate (0, -(msg.size - 5));
+	ctx.globalAlpha = .5;
+	ctx.fillStyle = "black";
+	ctx.fillRect (0, 0, w.width, msg.size);
+	ctx.restore ();
+	ctx.fillText (strs[s], 0, 0);
+	ctx.restore ();
     }
     ctx.restore ();
 }
 
-function Game_Msg (msg, color, font, timeout) {
-    this.msg = msg;
-    if (color == undefined) {
-	this.color = "rgb(255, 255, 255)";
-    } else {
-	this.color = color;
-    }
-    if (font == undefined || font == null) {
-	this.font = "48px Sans";
-    } else {
-	this.font = font;
-    }
-    this.timeout = timeout;
-}
 
 function load_image (src) {
     img = new Image ();
