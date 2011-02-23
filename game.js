@@ -33,16 +33,16 @@ Thing.prototype.update =
     function () {
 	Game_Object.prototype.update.call (this);
 	for (thing in things) {
-		   if (things[thing] == this) {
- 		       continue;
-		   }
- 		   this.color = "rgb(255, 0, 0)";
- 		   if (this.touching (things[thing])) {
- 		       this.color = "rgb(0, 255, 0)";
-		       this.current_frame = 1;
- 		   } else {
-		       this.current_frame = 0;
-		   }
+	    if (things[thing] == this) {
+ 		continue;
+	    }
+ 	    this.color = "rgb(255, 0, 0)";
+ 	    if (this.touching (things[thing])) {
+ 		this.color = "rgb(0, 255, 0)";
+		this.current_frame = 1;
+ 	    } else {
+		this.current_frame = 0;
+	    }
  	}
     };
 

@@ -43,6 +43,56 @@ function remove_from_array (array, obj) {
 }
 // End utility functions
 
+var game_messages = [];
+
+function draw_game_message () {
+    if (game_messages.length == 0) {
+	return;
+    }
+    if (game_messages[0].timeout == 0) {
+	game_messages.shift ();
+	if (game_messages.length == 0) {
+	    return;
+	}
+    }
+    msg = game_messages[0];
+    msg.timeout--;
+
+    var ctx = canvas.getContext ('2d');
+
+    ctx.save ();
+    ctx.fillStyle = msg.color;
+    ctx.font = msg.font;
+    strs = msg.msg.split ("\n");
+    for (s in strs) {
+	w = ctx.measureText (strs[s]);
+	ctx.fillText (strs[s], canvas.width / 2 - w.width / 2,
+		      canvas.height / 2 - 10 + s * 64);
+    }
+    ctx.restore ();
+}
+
+function Game_Msg (msg, color, font, quit_or_timeout) {
+    this.msg = msg;
+    if (color == undefined) {
+	this.color = "rgb(255, 255, 255)";
+    } else {
+	this.color = color;
+    }
+    if (font == undefined || font == null) {
+	this.font = "48px Sans";
+    } else {
+	this.font = font;
+    }
+    if (quit_or_timeout == true) {
+	this.quit = true;
+	this.timeout = -1;
+    } else {
+	this.quit = false;
+	this.timeout = quit_or_timeout;
+    }
+}
+
 function load_image (src) {
     img = new Image ();
     img.src = src;
