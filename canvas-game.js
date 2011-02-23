@@ -240,7 +240,7 @@ Game_Object.prototype.draw =
 	    return;
 	}
 	ctx.save ();
-	ctx.translate (this.x, this.y);
+	ctx.translate (Math.floor(this.x), Math.floor(this.y));
 	ctx.rotate (this.theta);
 	ctx.scale (this.scalex, this.scaley);
 	if (!this.imagefun) {
