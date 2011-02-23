@@ -45,7 +45,7 @@ function remove_from_array (array, obj) {
 
 var game_messages = [];
 
-function draw_game_message () {
+function draw_game_message (main_loop) {
     if (game_messages.length == 0) {
 	return;
     }
@@ -72,7 +72,7 @@ function draw_game_message () {
     ctx.restore ();
 }
 
-function Game_Msg (msg, color, font, quit_or_timeout) {
+function Game_Msg (msg, color, font, timeout) {
     this.msg = msg;
     if (color == undefined) {
 	this.color = "rgb(255, 255, 255)";
@@ -84,13 +84,7 @@ function Game_Msg (msg, color, font, quit_or_timeout) {
     } else {
 	this.font = font;
     }
-    if (quit_or_timeout == true) {
-	this.quit = true;
-	this.timeout = -1;
-    } else {
-	this.quit = false;
-	this.timeout = quit_or_timeout;
-    }
+    this.timeout = timeout;
 }
 
 function load_image (src) {
@@ -287,6 +281,7 @@ Game_Object.prototype.draw =
 	    || this.top() > screen_clip.y + screen_clip.h) {
 	    return;
 	}
+	this.image = this.frames[this.current_frame];
 	ctx.save ();
 	ctx.translate (Math.floor(this.x), Math.floor(this.y));
 	ctx.rotate (this.theta);
@@ -316,7 +311,6 @@ Game_Object.prototype.try_move =
     };
 Game_Object.prototype.update =
     function () {
-	this.image = this.frames[this.current_frame];
 	this.try_move (this.vx, 0);
 	this.try_move (0, this.vy);
     };
