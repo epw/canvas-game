@@ -45,7 +45,7 @@ function remove_from_array (array, obj) {
 
 var game_messages = [];
 
-function Game_Msg (msg, color, timeout, font, background) {
+function Game_Msg (msg, color, timeout, font) {
     this.msg = msg;
     if (color == undefined) {
 	this.color = "rgb(255, 255, 255)";
@@ -59,11 +59,6 @@ function Game_Msg (msg, color, timeout, font, background) {
 	this.font = font;
     }
     this.size = 48;
-    if (background == undefined) {
-	this.background = null;
-    } else {
-	this.background = background;
-    }
 }
 
 function draw_game_message (ctx, canvas) {
