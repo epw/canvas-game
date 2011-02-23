@@ -113,6 +113,7 @@ function Game_Object (image, scale, x, y, theta, shape) {
 	this.image = load_image (image);
     } else if (image instanceof Array) {
 	this.frames = load_frames (image);
+	this.current_frame = 0;
     } else if (typeof(image) == "function") {
 	this.imagefun = image;
     } else {
@@ -129,11 +130,6 @@ function Game_Object (image, scale, x, y, theta, shape) {
 	}
     }
 }
-Game_Object.prototype.choose_frame =
-    function (n) {
-	this.image = this.frames[n];
-	return this.image;
-    };
 Game_Object.prototype.w =
     function () {
 	if (typeof(this.width) == "undefined" && this.image) {
@@ -270,6 +266,7 @@ Game_Object.prototype.try_move =
     };
 Game_Object.prototype.update =
     function () {
+	this.image = this.frames[this.current_frame];
 	this.try_move (this.vx, 0);
 	this.try_move (0, this.vy);
     };

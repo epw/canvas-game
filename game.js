@@ -12,10 +12,10 @@ function Thing (r) {
 	Game_Object.call (this);
 	return;
     }
-    Game_Object.call (this, draw_thing, 1,
+    Game_Object.call (this, ["sphere.png", "tint-sphere.png"], 1,
 		      roll (canvas.width - r * 2) + r,
 		      roll (canvas.height - r * 2) + r, 0,
-		      "rect");
+		      "circle");
     this.color = "rgb(255, 0, 0)";
     this.speed = 5;
     this.width = r * 2;
@@ -39,7 +39,10 @@ Thing.prototype.update =
  		   this.color = "rgb(255, 0, 0)";
  		   if (this.touching (things[thing])) {
  		       this.color = "rgb(0, 255, 0)";
- 		   }
+		       this.current_frame = 1;
+ 		   } else {
+		       this.current_frame = 0;
+		   }
  	}
     };
 
