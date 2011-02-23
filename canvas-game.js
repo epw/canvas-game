@@ -4,6 +4,9 @@
 var FRAME_RATE = 30; // Can be set by application
 var KEY = { RIGHT:39, UP:38, LEFT:37, DOWN:40, SPACE:32, ESCAPE:27, RETURN:13};
 
+// Game variable, can be altered
+var screen_clip = {"x": 0, "y": 0, "w": 640, "h": 480};
+
 // Utility functions
 function ord (c) {
     return c.charCodeAt(0);
@@ -95,7 +98,6 @@ function Game_Object (image, scale, x, y, theta, shape) {
     this.y = y;
     this.vx = 0;
     this.vy = 0;
-    this.clip = {"x": 0, "y": 0, "w": 640, "h": 480};
 
     if (scale instanceof Array) {
 	this.scalex = scale[0];
@@ -233,10 +235,10 @@ Game_Object.prototype.touching =
     };
 Game_Object.prototype.draw =
     function (ctx) {
-	if (this.right() < this.clip.x
-	    || this.left() > this.clip.x + this.clip.w
-	    || this.bottom() < this.clip.y
-	    || this.top() > this.clip.y + this.clip.h) {
+	if (this.right() < screen_clip.x
+	    || this.left() > screen_clip.x + screen_clip.w
+	    || this.bottom() < screen_clip.y
+	    || this.top() > screen_clip.y + screen_clip.h) {
 	    return;
 	}
 	ctx.save ();
