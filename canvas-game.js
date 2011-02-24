@@ -45,7 +45,7 @@ function remove_from_array (array, obj) {
 
 var game_messages = [];
 
-function Game_Msg (msg, color, timeout, font) {
+function Game_Msg (msg, color, timeout, font, background) {
     this.msg = msg;
     if (color == undefined) {
 	this.color = "rgb(255, 255, 255)";
@@ -59,6 +59,11 @@ function Game_Msg (msg, color, timeout, font) {
 	this.font = font;
     }
     this.size = 48;
+    if (background == undefined) {
+	this.background = "black";
+    } else {
+	this.background = background;
+    }
 }
 
 function draw_game_message (ctx, canvas) {
@@ -86,7 +91,7 @@ function draw_game_message (ctx, canvas) {
 	ctx.save ();
 	ctx.translate (0, -(msg.size - 5));
 	ctx.globalAlpha = .5;
-	ctx.fillStyle = "black";
+	ctx.fillStyle = msg.background;
 	ctx.fillRect (0, 0, w.width, msg.size);
 	ctx.restore ();
 	ctx.fillText (strs[s], 0, 0);
@@ -167,6 +172,7 @@ function Game_Object (image, scale, x, y, theta, shape) {
     } else if (image instanceof Array) {
 	this.frames = load_frames (image);
 	this.current_frame = 0;
+	this.image = this.frames[0];
     } else if (typeof(image) == "function") {
 	this.imagefun = image;
     } else {
