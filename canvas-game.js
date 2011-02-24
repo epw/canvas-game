@@ -108,11 +108,16 @@ function load_image (src) {
 }
 
 function load_frames (srcs) {
-    frames = [];
+    frames = null;
+    if (srcs instanceof Array) {
+	frames = [];
+    } else {
+	frames = {};
+    }
     for (src in srcs) {
 	img = new Image ();
 	img.src = srcs[src];
-	frames.push (img);
+	frames[src] = img;
     }
     return frames;
 }
@@ -169,14 +174,16 @@ function Game_Object (image, scale, x, y, theta, shape) {
 
     if (typeof (image) == "string") {
 	this.image = load_image (image);
-    } else if (image instanceof Array) {
-	this.frames = load_frames (image);
-	this.current_frame = 0;
-	this.image = this.frames[0];
-    } else if (typeof(image) == "function") {
+    } else if (image instanceof Function) {
 	this.imagefun = image;
     } else {
-	this.image = image;
+	this.frames = load_frames (image);
+	if (image instanceof Array) {
+	    this.current_frame = 0;
+	} else {
+	    this.current_frame = "0";
+	}
+	this.image = this.frames[this.current_frame];
     }
 
     if (this.shape == "circle") {
