@@ -5,6 +5,8 @@ var keys = {};
 
 var player;
 
+var static;
+
 var things = [];
 Thing.prototype = new Game_Object;
 function Thing (r) {
@@ -45,6 +47,17 @@ Thing.prototype.update =
 	    }
  	}
     };
+
+Static.prototype = new Game_Object;
+function Static () {
+    Game_Object.call (this, "sphere.png", 1,
+		      canvas.width / 2, canvas.height / 2, 0, "circle");
+    delete this.image;
+    this.imagefun = draw_player;
+    this.width = 40;
+    this.height = 40;
+    this.shape = "circle";
+}
 
 Player.prototype = new Thing;
 function Player (r) {
@@ -114,6 +127,8 @@ function draw () {
 	things[thing].draw (ctx);
     }
 
+    static.draw (ctx);
+
 }
 
 function update () {
@@ -152,6 +167,8 @@ function init () {
     things.push (player);
     things.push (new Thing(20));
     things[0].vx = 1;
+
+    static = new Static ();
 
     $(".loglabel").click (function () { $(this).toggle (); });
 
