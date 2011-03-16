@@ -52,8 +52,6 @@ Static.prototype = new Game_Object;
 function Static () {
     Game_Object.call (this, "sphere.png", 1,
 		      canvas.width / 2, canvas.height / 2, 0, "circle");
-    delete this.image;
-    this.imagefun = draw_player;
     this.width = 40;
     this.height = 40;
     this.shape = "circle";

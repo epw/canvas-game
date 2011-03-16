@@ -303,7 +303,9 @@ Game_Object.prototype.draw =
 	    || this.top() > screen_clip.y + screen_clip.h) {
 	    return;
 	}
-	this.image = this.frames[this.current_frame];
+	if (typeof (this.frames) == "undefined") {
+	    this.image = this.frames[this.current_frame];
+	}
 	ctx.save ();
 	ctx.translate (Math.floor(this.x), Math.floor(this.y));
 	ctx.rotate (this.theta);
