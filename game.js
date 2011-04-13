@@ -164,7 +164,7 @@ function init () {
     player = new Player (20);
     things.push (player);
     things.push (new Thing(20));
-    things[0].vx = 1;
+    things[1].vx = 1;
 
     static = new Static ();
 
