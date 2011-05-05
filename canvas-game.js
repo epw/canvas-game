@@ -5,8 +5,8 @@ var FRAME_RATE = 30; // Can be set by application
 var KEY = { RIGHT:39, UP:38, LEFT:37, DOWN:40, SPACE:32, ESCAPE:27, RETURN:13,
 	    SHIFT:16, CONTROL:17, ALT:18};
 
-// Game variable, can be altered
-var screen_clip = {"x": 0, "y": 0, "w": 640, "h": 480};
+// Game variable, can be altered. DECLARE IF NEEDED
+//var screen_clip = {"x": 0, "y": 0, "w": 800, "h": 600};
 
 // Utility functions
 function ord (c) {
@@ -299,11 +299,13 @@ Game_Object.prototype.touching =
     };
 Game_Object.prototype.draw =
     function (ctx) {
-	if (this.right() < screen_clip.x
-	    || this.left() > screen_clip.x + screen_clip.w
-	    || this.bottom() < screen_clip.y
-	    || this.top() > screen_clip.y + screen_clip.h) {
-	    return;
+	if (typeof(screen_clip) != "undefined") {
+	    if (this.right() < screen_clip.x
+		|| this.left() > screen_clip.x + screen_clip.w
+		|| this.bottom() < screen_clip.y
+		|| this.top() > screen_clip.y + screen_clip.h) {
+		return;
+	    }
 	}
 	if (typeof (this.frames) != "undefined" && this.frames != []) {
 	    this.image = this.frames[this.current_frame];
