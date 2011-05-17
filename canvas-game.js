@@ -339,6 +339,9 @@ Game_Object.prototype.update =
 	this.try_move (this.vx, 0);
 	this.try_move (0, this.vy);
     };
+
+//@arguments border - an enum representing the border
+//@return a boolean representing whether the object is touching the border in question (true) or not (false)
 Game_Object.prototype.isTouchingBorder =
 	function (border) {
 	switch(border) {
