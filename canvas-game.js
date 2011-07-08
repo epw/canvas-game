@@ -365,7 +365,7 @@ Game_Object.prototype.isTouchingBorder =
  			if( this.x >= canvas.width ){
 				return true;
 			} else{
-				return false
+				return false;
 			}
 			break;
 		}
