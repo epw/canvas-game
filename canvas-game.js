@@ -26,6 +26,9 @@ function hypot (a, b) {
 }
 
 function between (x, lower, upper, exclusive) {
+    if (typeof (exclusive) == "undefined") {
+	exclusive = false;
+    }
     if (lower > upper) {
 	var tmp = upper;
 	upper = lower;
@@ -213,6 +216,14 @@ Game_Object.prototype.h =
 	}
 	return this.height * this.scaley;
     };
+Game_Object.prototype.r =
+    function () {
+	if (this.shape != "circle") {
+	    return null;
+	}
+
+	return this.width;
+    };
 Game_Object.prototype.left =
     function (val) {
 	if (typeof (val) == "undefined") {
@@ -297,6 +308,16 @@ Game_Object.prototype.touching =
 		+ gobj.shape;
 	}
 	return null;
+    };
+Game_Object.prototype.point_in =
+    function (point) {
+	if (this.shape == "circle") {
+	    return (hypot (point[0] - this.x, point[1] - this.y) < this.r());
+	} else if (this.shape == "rect") {
+	    return (between (point[0], this.left(), this.right())
+		    && between (point[1], this.top(), this.bottom()));
+	}
+	return "unknown shape";
     };
 Game_Object.prototype.draw =
     function (ctx) {
