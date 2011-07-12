@@ -4,7 +4,7 @@
 var FRAME_RATE = 30; // Can be set by application
 
 var KEY = { RIGHT:39, UP:38, LEFT:37, DOWN:40, SPACE:32, ESCAPE:27, RETURN:13,
-	    SHIFT:16, CONTROL:17, ALT:18, PERIOD:190, MINUS:189};
+	    SHIFT:16, CONTROL:17, ALT:18, PERIOD:190, MINUS:189, DELETE:46};
 
 // Game variable, can be altered
 //var screen_clip = {"x": 0, "y": 0, "w": 640, "h": 480};
