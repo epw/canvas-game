@@ -222,7 +222,7 @@ Game_Object.prototype.r =
 	    return null;
 	}
 
-	return this.width * ((this.scalex + this.scaley) / 2) / 2;
+	return (this.w() + this.h()) / 2;
     };
 Game_Object.prototype.left =
     function (val) {
