@@ -222,7 +222,7 @@ Game_Object.prototype.r =
 	    return null;
 	}
 
-	return this.width / 2;
+	return this.width * ((this.scalex + this.scaley) / 2) / 2;
     };
 Game_Object.prototype.left =
     function (val) {
@@ -256,6 +256,19 @@ Game_Object.prototype.bottom =
 	this.y = val - this.h() / 2;
 	return this.y + this.h() / 2;
 
+    };
+Game_Object.prototype.resize = 
+    function (scale) {
+	if (typeof (scale) == "undefined") {
+	    return [this.scalex, this.scaley];
+	}
+	if (scale instanceof Array) {
+	    this.scalex = scale[0];
+	    this.scaley = scale[1];
+	} else {
+	    this.scalex = scale;
+	    this.scaley = scale;
+	}
     };
 Game_Object.prototype.touching =
     function (gobj) {
@@ -339,7 +352,7 @@ Game_Object.prototype.draw =
 	if (!this.imagefun) {
 	    safe_draw_image (ctx, this.image,
 			     -this.w() / 2, -this.h() / 2,
-			     this.image.width, this.image.height);
+			     this.w(), this.h());
 	} else {
 	    this.imagefun (ctx);
 	}
