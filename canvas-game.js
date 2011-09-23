@@ -372,7 +372,9 @@ Game_Object.prototype.try_move =
 	if (this.pass() == false) {
 	    this.x -= dx;
 	    this.y -= dy;
+	    return false;
 	}
+	return true;
     };
 Game_Object.prototype.update =
     function () {
