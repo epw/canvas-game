@@ -182,16 +182,18 @@ function Game_Object (image, scale, x, y, theta, shape) {
 	this.image = load_image (image);
     } else if (image instanceof Function) {
 	this.imagefun = image;
-    } else if (image instanceof Object) {
-	this.image = image;
-    } else {
+    } else if (image instanceof Array) {
 	this.frames = load_frames (image);
-	if (image instanceof Array) {
-	    this.current_frame = 0;
-	} else {
-	    this.current_frame = "0";
-	}
+	this.current_frame = 0;
 	this.image = this.frames[this.current_frame];
+    } else {
+	if (typeof (image["0"]) == "undefined") {
+	    	this.image = image;
+	} else {
+	    this.frames = load_frames (image);
+	    this.current_frame = "0";
+	    this.image = this.frames[this.current_frame];
+	}
     }
 
     if (this.shape == "circle") {
