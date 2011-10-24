@@ -358,7 +358,7 @@ Game_Object.prototype.draw =
 			     -this.w() / 2, -this.h() / 2,
 			     this.w(), this.h());
 	} else {
-	    this.imagefun (ctx);
+	    this.imagefun (ctx, this);
 	}
 	ctx.restore ();
     };
