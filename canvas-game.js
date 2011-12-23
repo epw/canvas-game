@@ -384,8 +384,8 @@ Game_Object.prototype.try_move =
     };
 Game_Object.prototype.update =
     function () {	
-    this.try_move (this.vx, 0);
-    this.try_move (0, this.vy);
+	this.try_move (this.vx, 0);
+	this.try_move (0, this.vy);
     };
 
 //@arguments border - an enum representing the border
