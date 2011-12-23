@@ -13,4 +13,32 @@ tags of the HTML page:
 Any version of jquery should work, so if one is already available,
 then it can be used instead.
 
-game.js contains an example of how to use the library.
+game.html and game.js contain an example of using the library.
+
+CONSTANTS
+
+FRAME_RATE: The number of frames to be displayed per second. Can by
+	    dynamically adjusted by the application, if desired.
+KEY: An associative array mapping names to HTML event keycode values,
+	    when the key does not match its ASCII code (or lacks and
+	    ASCII code).
+
+FUNCTIONS
+
+ord (): Returns the character code (normally ASCII) of a character.
+chr (): Returns the character represented by the integer given.
+roll (): Return an integer in the range [0, n).
+hypot (): Return hypotenuse of triangle with sides of length a and b.
+between (): Return whether x is in the range [lower, upper] (or
+	(lower, upper) if exclusive is true)
+remove_from_array (): Remove object from array, and shorten array so
+		  that there is not an element containing null
+		  instead.
+draw_game_message (): Draw the current game message, moving down the
+		  queue if necessary.
+load_image (): Load an image from the server into an Image object.
+load_frames (): Load a number of images into an array of frames.
+safe_draw_image (): Draw an image to the <canvas> tag, with optionally
+		specified width and height. If the global variable
+		ignore_errors is set to true, all errors from
+		ctx.drawImage are silently discarded.
