@@ -13,15 +13,21 @@ tags of the HTML page:
 Any version of jquery should work, so if one is already available,
 then it can be used instead.
 
-game.html and game.js contain an example of using the library.
+game.html and game.js contain an example of using the library. They
+create three subclasses of Game_Object, named Thing, Static, and
+Player. Player overrides Game_Object.update() in order to respond to
+keyboard events, which are collected by key_press() and
+key_release().
 
 CONSTANTS
 
 FRAME_RATE: The number of frames to be displayed per second. Can by
 	    dynamically adjusted by the application, if desired.
 KEY: An associative array mapping names to HTML event keycode values,
-	    when the key does not match its ASCII code (or lacks and
-	    ASCII code).
+	    which can be used to store which keys are currently
+	    pressed. Some common keys which does not match their ASCII
+	    codes (or lack an ASCII code) have a constant name
+	    provided.
 
 FUNCTIONS
 
