@@ -128,3 +128,6 @@ Game_Object.update (): By default, moves the object according to its
 		   complex objects. The default behavior is likely
 		   useful to be called at some point in more
 		   complicated methods.
+Game_Object.isTouchingBorder (border): Tests to see if the object is
+		   touching a given border of the screen. The borders
+		   are numbered as follows: Top = 1, Bottom = 2, Right = 3, Left = 4.
