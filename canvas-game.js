@@ -11,6 +11,12 @@ var STEERING = { APPROACH : 1, CHASE : 2};
 // Game variable, can be altered
 //var screen_clip = {"x": 0, "y": 0, "w": 640, "h": 480};
 
+var VERSION = "0.5";
+
+function verify_version (v) {
+    return v <= VERSION;
+}
+
 // Utility functions
 function ord (c) {
     return c.charCodeAt(0);
