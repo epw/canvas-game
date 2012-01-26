@@ -33,7 +33,7 @@ Thing.prototype.pass =
     };
 Thing.prototype.update =
     function () {
-	Game_Object.prototype.update.call (this);
+    Game_Object.prototype.update.call (this);
 	for (thing in things) {
 	    if (things[thing] == this) {
  		continue;
@@ -87,6 +87,18 @@ Player.prototype.update =
 	Thing.prototype.update.call (this);
     };
 
+SteerBall.prototype = new Thing;
+function SteerBall(r){
+    Thing.call(this, r);
+    this.width = 40;
+    this.height = 40;
+    this.shape = "circle";
+}
+SteerBall.prototype.update =
+    function (){
+    SteerBall.prototype.steerTo(0,0,1);
+}
+
 function log (s) {
     $("#log").append ("<div class=\"logentry\">");
     $("#log").append ("<span class=\"logtimestamp\">"
@@ -107,7 +119,7 @@ function draw_player (ctx) {
     ctx.beginPath ();
     ctx.arc (0, 0, this.w() / 2, 0, Math.PI * 2, false);
     ctx.fill ();
-//    ctx.fillRect (-this.w() / 2, -this.h() / 2, this.w(), this.h());
+    //ctx.fillRect (-this.w() / 2, -this.h() / 2, this.w(), this.h());
     ctx.restore ();
 }
 
@@ -125,7 +137,7 @@ function draw () {
 	things[thing].draw (ctx);
     }
 
-    static.draw (ctx);
+    //    static.draw (ctx);
 
 }
 
@@ -163,10 +175,12 @@ function init () {
 
     player = new Player (20);
     things.push (player);
-    things.push (new Thing(20));
-    things[1].vx = 1;
+    //things.push (new Thing(20));
+    //things[1].vx = 1;
+    steerball = new SteerBall(20);
+    things.push (steerball);
 
-    static = new Static ();
+    //    static = new Static ();
 
     $(".loglabel").click (function () { $(this).toggle (); });
 

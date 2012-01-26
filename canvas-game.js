@@ -6,8 +6,16 @@ var FRAME_RATE = 30; // Can be set by application
 var KEY = { RIGHT:39, UP:38, LEFT:37, DOWN:40, SPACE:32, ESCAPE:27, RETURN:13,
 	    SHIFT:16, CONTROL:17, ALT:18, PERIOD:190, MINUS:189, DELETE:46};
 
+var STEERING = { APPROACH : 1, CHASE : 2};
+
 // Game variable, can be altered
 //var screen_clip = {"x": 0, "y": 0, "w": 640, "h": 480};
+
+var VERSION = "0.5";
+
+function verify_version (v) {
+    return v <= VERSION;
+}
 
 // Utility functions
 function ord (c) {
@@ -168,6 +176,8 @@ function Game_Object (image, scale, x, y, theta, shape) {
     this.vx = 0;
     this.vy = 0;
 
+    this.steering_mode = STEERING.APPROACH;
+
     if (scale instanceof Array) {
 	this.scalex = scale[0];
 	this.scaley = scale[1];
@@ -182,16 +192,18 @@ function Game_Object (image, scale, x, y, theta, shape) {
 	this.image = load_image (image);
     } else if (image instanceof Function) {
 	this.imagefun = image;
-    } else if (image instanceof Object) {
-	this.image = image;
-    } else {
+    } else if (image instanceof Array) {
 	this.frames = load_frames (image);
-	if (image instanceof Array) {
-	    this.current_frame = 0;
-	} else {
-	    this.current_frame = "0";
-	}
+	this.current_frame = 0;
 	this.image = this.frames[this.current_frame];
+    } else {
+	if (typeof (image["0"]) == "undefined") {
+	    	this.image = image;
+	} else {
+	    this.frames = load_frames (image);
+	    this.current_frame = "0";
+	    this.image = this.frames[this.current_frame];
+	}
     }
 
     if (this.shape == "circle") {
@@ -359,7 +371,7 @@ Game_Object.prototype.draw =
 			     -this.w() / 2, -this.h() / 2,
 			     this.w(), this.h());
 	} else {
-	    this.imagefun (ctx);
+	    this.imagefun (ctx, this);
 	}
 	ctx.restore ();
     };
@@ -375,10 +387,12 @@ Game_Object.prototype.try_move =
 	if (this.pass() == false) {
 	    this.x -= dx;
 	    this.y -= dy;
+	    return false;
 	}
+	return true;
     };
 Game_Object.prototype.update =
-    function () {
+    function () {	
 	this.try_move (this.vx, 0);
 	this.try_move (0, this.vy);
     };
@@ -411,3 +425,22 @@ Game_Object.prototype.isTouchingBorder =
 	}
 	return null; // Never reached
     };
+
+Game_Object.prototype.setSteeringMode =
+    function(mode){
+    if (mode > 2 || mode < 1){
+	return;
+    }
+    this.steering_mode = mode;
+};
+
+Game_Object.prototype.steerTo =
+    function(dest_x,dest_y, s){
+    log("Entering steering function");
+    log("x: "+this.x);
+    log("y: "+this.y);
+    this.x += s * Math.sin(this.theta);
+    this.y += s * Math.cos(this.theta);
+    log("x: "+this.x);
+    log("y: "+this.y);
+}
