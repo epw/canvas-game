@@ -325,7 +325,10 @@ Game_Object.prototype.touching =
 	return null;
     };
 Game_Object.prototype.point_in =
-    function (point) {
+    function (point, other) {
+	if (typeof (other) != "undefined") {
+	    point = [point, other];
+	}
 	if (this.shape == "circle") {
 	    return (hypot (point[0] - this.x, point[1] - this.y) < this.r());
 	} else if (this.shape == "rect") {
