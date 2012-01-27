@@ -182,6 +182,8 @@ function Game_Object (image, scale, x, y, theta, shape) {
 	this.image = load_image (image);
     } else if (image instanceof Function) {
 	this.imagefun = image;
+    } else if (image instanceof HTMLImageElement) {
+	this.image = image;
     } else {
 	this.frames = load_frames (image);
 	if (image instanceof Array) {
