@@ -105,6 +105,19 @@ function draw_game_message (ctx, canvas) {
     ctx.restore ();
 }
 
+function Dialogue_Box(msg, color, esc_key, font, background){
+	 this.msg = msg;
+	 if (color == undefined){
+	    this.color = "rgb(255, 255, 255)";
+	 } else{
+	   this.color = color;
+	 }
+	 if( esc_key == undefined){
+	     this.esc_key = "13"; //enter key
+	 } else{
+	   this.esc_key = esc_key;
+	 }
+}
 
 function load_image (src) {
     img = new Image ();
