@@ -12,8 +12,19 @@ function draw () {
     ctx.fillStyle = "rgb(175, 200, 255)";
     ctx.fillRect (0, 0, canvas.width, canvas.height);
 
+    ball.draw(ctx);
+
     ctx.restore ();
 }
+
+Ball.prototype = new Game_Object;
+function Ball(){
+    Game_Object.call (this, "sphere.png", 1, 200, 150, 0, "circle");
+}
+Ball.prototype.update =
+    function (){
+
+};
 
 function update () {
     draw ();
@@ -40,6 +51,8 @@ function key_release (event) {
 
 function init () {
     canvas = document.getElementById("canvas");
+
+    ball = new Ball();
 
     $(".loglabel").click (function () { $(this).toggle (); });
 
