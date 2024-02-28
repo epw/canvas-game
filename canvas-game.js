@@ -27,15 +27,15 @@ function hypot (a, b) {
 
 function between (x, lower, upper, exclusive) {
     if (typeof (exclusive) == "undefined") {
-	exclusive = false;
+		exclusive = false;
     }
     if (lower > upper) {
-	var tmp = upper;
-	upper = lower;
-	lower = tmp;
+		var tmp = upper;
+		upper = lower;
+		lower = tmp;
     }
     if (!exclusive) {
-	return (x >= lower) && (x <= upper);
+		return (x >= lower) && (x <= upper);
     }
     return (x > lower) && (x < upper);
 }
@@ -53,34 +53,36 @@ var game_messages = [];
 function Game_Msg (msg, color, timeout, font, background) {
     this.msg = msg;
     if (color == undefined) {
-	this.color = "rgb(255, 255, 255)";
+		this.color = "rgb(255, 255, 255)";
     } else {
-	this.color = color;
+		this.color = color;
     }
     this.timeout = timeout;
     if (font == undefined || font == null) {
-	this.font = "48px Sans";
+		this.font = "48px Sans";
     } else {
 	this.font = font;
     }
     this.size = 48;
     if (background == undefined) {
-	this.background = "black";
+		this.background = "black";
     } else {
-	this.background = background;
+		this.background = background;
     }
 }
 
 function draw_game_message (ctx, canvas) {
     if (game_messages.length == 0) {
-	return;
+		return;
     }
+
     if (game_messages[0].timeout == 0) {
-	game_messages.shift ();
-	if (game_messages.length == 0) {
-	    return;
-	}
+		game_messages.shift ();
+		if (game_messages.length == 0) {
+	    	return;
+		}
     }
+
     msg = game_messages[0];
     msg.timeout--;
 
@@ -88,19 +90,20 @@ function draw_game_message (ctx, canvas) {
     ctx.fillStyle = msg.color;
     ctx.font = msg.font;
     strs = msg.msg.split ("\n");
+
     for (s in strs) {
-	ctx.save ();
-	w = ctx.measureText (strs[s]);
-	ctx.translate (canvas.width / 2 - w.width / 2,
+		ctx.save ();
+		w = ctx.measureText (strs[s]);
+		ctx.translate (canvas.width / 2 - w.width / 2,
 		       canvas.height / 2 - 10 + s * (msg.size + 5));
-	ctx.save ();
-	ctx.translate (0, -(msg.size - 5));
-	ctx.globalAlpha = .5;
-	ctx.fillStyle = msg.background;
-	ctx.fillRect (0, 0, w.width, msg.size);
-	ctx.restore ();
-	ctx.fillText (strs[s], 0, 0);
-	ctx.restore ();
+		ctx.save ();
+		ctx.translate (0, -(msg.size - 5));
+		ctx.globalAlpha = .5;
+		ctx.fillStyle = msg.background;
+		ctx.fillRect (0, 0, w.width, msg.size);
+		ctx.restore ();
+		ctx.fillText (strs[s], 0, 0);
+		ctx.restore ();
     }
     ctx.restore ();
 }
@@ -128,14 +131,15 @@ function load_image (src) {
 function load_frames (srcs) {
     frames = null;
     if (srcs instanceof Array) {
-	frames = [];
+		frames = [];
     } else {
-	frames = {};
+		frames = {};
     }
-    for (src in srcs) {
-	img = new Image ();
-	img.src = srcs[src];
-	frames[src] = img;
+    
+	for (src in srcs) {
+		img = new Image ();
+		img.src = srcs[src];
+		frames[src] = img;
     }
     return frames;
 }
@@ -335,7 +339,6 @@ Game_Object.prototype.touching =
 	    return "this object has unknown shape "
 		+ gobj.shape;
 	}
-	return null;
     };
 Game_Object.prototype.point_in =
     function (point, other) {
@@ -404,23 +407,22 @@ Game_Object.prototype.isTouchingBorder =
 	switch(border) {
 	case 1: //top
 	    if( this.y <= 0 ){
-		return true;
+			return true;
 	    }
 	case 2: //bottom
 	    if( this.y >= canvas.height ){
-		return true;
+			return true;
 	    }
 	case 4: //left
 	    if( this.x <= 0 ){
-		return true;
+			return true;
 	    }
 	case 3: //right
  	    if( this.x >= canvas.width ){
-		return true;
+			return true;
 	    } else{
-		return false;
+			return false;
 	    }
-	    break;
 	}
 	return null; // Never reached
     };
