@@ -1,17 +1,11 @@
 This library is set up to help make HTML5 games with the <canvas> tag.
 
-To use, copy canvas-game.js and a version of jquery (jquery-1.5.min.js
-is included with the distribution) to the directory on your webserver
+To use, copy canvas-game.js to the directory on your webserver
 where you will be writing the game.
 
-Assuming that the primary game page is in the same directory as the
-two .js files, include these lines in between the <head> and </head>
+Assuming that the primary game page is in the same directory as canvas-game.js , include this line in between the <head> and </head>
 tags of the HTML page:
-     <script type="text/javascript" src="jquery-1.5.min.js"></script>
      <script type="text/javascript" src="canvas-game.js"></script>
-
-Any version of jquery should work, so if one is already available,
-then it can be used instead.
 
 game.html and game.js contain an example of using the library. They
 create three subclasses of Game_Object, named Thing, Static, and
