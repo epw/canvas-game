@@ -79,44 +79,58 @@ Game_Object: This class is the primary reason for the existence of
 Game_Object methods:
 
 Game_Object.w(): Returns the width of the object
+
 Game_Object.h(): Returns the height of the object
+
 Game_Object.r(): Returns the radius of the object if it is a circle,
 		 or null otherwise.
+		 
 Game_Object.left(): With no parameter, returns the position in pixels
 	of the leftmost side of the object.
 	With a parameter, sets the left side to the given
 	value. Adjusts other object coordinates to match.
+	
 Game_Object.right(): As Game_Object.left(), but for right side of the
 	object.
+	
 Game_Object.top(): As Game_Object.left(), but for top side of the
 	object.
+	
 Game_Object.bottom(): As Game_Object.left(), but for bottom of the
 	object.
+	
 Game_Object.resize(): Change the scaling factors of the object
+
 Game_Object.touching(): Determine whether the object is touching the
 	other object passed into the parameter. Uses
 	each object's shape property to determine
 	whether they are in contact.
+	
 Game_Object.point_in (): Determine whether the given point, a
 	two-element array, falls inside the object's area.
+	
 Game_Object.draw (): Draw the object, using its position, scaling
 	factors, and theta. If the library's assumptions about
 	rendering the object are incorrect, this function should be
 	overriden in subclasses. This function should be called in the
 	game's main loop.
+	
 Game_Object.pass (): Used to determine whether an object's current
 	position "passes", or is legal within the game's logic. Always
 	returns true by default, can be overriden to implement new
 	behaviors. Used by Game_Object.try_move() to determine whether
 	the object's position should be altered.
+	
 Game_Object.try_move (): Test whether moving the object by (dx, dy)
 	pixels would make Game_Object.pass() return false. If not,
 	moves the object and returns true. Otherwise, returns false.
+	
 Game_Object.update (): By default, moves the object according to its
 	velocity. This function should be called in the game's main
 	loop, and should be overridden for more complex objects. The
 	default behavior is likely useful to be called at some point
 	in more complicated methods.
+	
 Game_Object.isTouchingBorder (border): Tests to see if the object is
 	touching a given border of the screen. The borders are
 	numbered as follows: Top = 1, Bottom = 2, Right = 3, Left =
