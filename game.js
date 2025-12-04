@@ -1,11 +1,12 @@
 var canvas;
 var main_loop;
+var ball;
 
 var keys = {};
 
 
 function draw () {
-    ctx = canvas.getContext ('2d');
+    ctx = canvas.getContext('2d');
 
     ctx.save ();
 
@@ -47,17 +48,19 @@ function key_release (event) {
 	    break;
     case KEY.ESCAPE:
 	    clearInterval (main_loop);
-	    log ("Stopped");
 	    break;
     }
 }
 
 function init () {
-    canvas = document.getElementById("canvas");
+    canvas = document.getElementsByTagName('canvas')[0];
+    console.log(canvas);
 
-    const ball = new Ball();
+    ball = new Ball();
 
-    $(".loglabel").click (function () { $(this).toggle (); });
+    console.log ("Starting main loop");
 
     main_loop = setInterval (update, 1000.0 / FRAME_RATE);
 }
+
+init();

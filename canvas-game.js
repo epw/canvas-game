@@ -3,8 +3,10 @@
 // Game constants
 var FRAME_RATE = 30; // Can be set by application
 
-var KEY = { RIGHT:39, UP:38, LEFT:37, DOWN:40, SPACE:32, ESCAPE:27, RETURN:13,
+/*jslint-disable*/
+var KEY = { LEFT:37, RIGHT:39, UP:38, DOWN:40, SPACE:32, ESCAPE:27, RETURN:13,
 	    SHIFT:16, CONTROL:17, ALT:18, PERIOD:190, MINUS:189, DELETE:46};
+/*jslint-enable*/
 
 // Game variable, can be altered
 //var screen_clip = {"x": 0, "y": 0, "w": 640, "h": 480};
@@ -13,6 +15,7 @@ var KEY = { RIGHT:39, UP:38, LEFT:37, DOWN:40, SPACE:32, ESCAPE:27, RETURN:13,
 function ord (c) {
     return c.charCodeAt(0);
 }
+
 function chr(d) {
     return String.fromCharCode(d);
 }
@@ -161,12 +164,14 @@ function safe_draw_image (ctx, image, x, y, w, h) {
 
 function Game_Object (image, scale, x, y, theta, shape) {
     if (typeof (image) == "undefined") {
-	image = null;
-	return;
+        image = null;
+        return;
     }
+
     if (typeof (scale) == "undefined") {
-	scale = 1;
+        scale = 1;
     }
+	
     if (typeof (x) == "undefined") {
 	x = 0;
     }
@@ -243,6 +248,7 @@ Game_Object.prototype.r =
 
 	return (this.w() + this.h()) / 2;
     };
+
 Game_Object.prototype.left =
     function (val) {
 	if (typeof (val) == "undefined") {
@@ -251,6 +257,7 @@ Game_Object.prototype.left =
 	this.x = val + this.w() / 2;
 	return this.x - this.w() / 2;
     };
+
 Game_Object.prototype.right =
     function (val) {
 	if (typeof (val) == "undefined") {
@@ -259,6 +266,7 @@ Game_Object.prototype.right =
 	this.x = val - this.w() / 2;
 	return this.x + this.w() / 2;
     };
+
 Game_Object.prototype.top =
     function (val) {
 	if (typeof (val) == "undefined") {
@@ -267,6 +275,7 @@ Game_Object.prototype.top =
 	this.y = val + this.h() / 2;
 	return this.y - this.h() / 2;
     };
+
 Game_Object.prototype.bottom =
     function (val) {
 	if (typeof (val) == "undefined") {
@@ -276,6 +285,7 @@ Game_Object.prototype.bottom =
 	return this.y + this.h() / 2;
 
     };
+
 Game_Object.prototype.resize = 
     function (scale) {
 	if (typeof (scale) == "undefined") {
@@ -289,6 +299,7 @@ Game_Object.prototype.resize =
 	    this.scaley = scale;
 	}
     };
+
 Game_Object.prototype.touching =
     function (gobj) {
 	if (this.shape == "circle") {
