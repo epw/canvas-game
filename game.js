@@ -18,15 +18,14 @@ function draw () {
     ctx.restore ();
 }
 
-Ball.prototype = new Game_Object;
-function Ball(){
-    Game_Object.call (this, "sphere.png", 1, 200, 150, 0, "circle");
+class Ball extends Game_Object {
+    constructor() {
+        super("sphere.png", 1, 200, 150, 0, "circle");
+    }
+    update() {
+    }
 }
 
-Ball.prototype.update =
-    function (){
-
-};
 
 function update () {
     draw ();
